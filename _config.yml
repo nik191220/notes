@@ -1,0 +1,4 @@
+theme: minima
+markdown: kramdown
+title: "Мой сайт"
+description: "Сайт с Markdown-файлами"
