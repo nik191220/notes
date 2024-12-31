@@ -20,16 +20,23 @@
             font-weight: bold;
             color: #007BFF;
         }
+        #storage {
+            font-size: 1.5rem;
+            margin-top: 10px;
+            color: #555;
+        }
     </style>
 </head>
 <body>
     <h1>Live Registration Counter</h1>
     <p>Number of users registered since <strong>December 31, 2024</strong>:</p>
     <div id="counter">0</div>
+    <p id="storage">0 GB allocated</p>
 
     <script>
         // Constants
         const registrationsPerMinute = 926; // Average registrations per minute
+        const gbPerAccount = 15; // Storage per account in GB
         const startDate = new Date("2024-12-31T00:00:00"); // Starting point
 
         // Calculate the number of registrations dynamically
@@ -37,11 +44,13 @@
             const now = new Date();
             const elapsedTimeInMinutes = (now - startDate) / (1000 * 60); // Time in minutes
             const totalRegistrations = Math.floor(elapsedTimeInMinutes * registrationsPerMinute);
+            const totalStorage = totalRegistrations * gbPerAccount;
 
             document.getElementById('counter').textContent = totalRegistrations.toLocaleString();
+            document.getElementById('storage').textContent = `${totalStorage.toLocaleString()} GB allocated`;
         }
 
-        // Update counter every second
+        // Update counter every 10ms
         setInterval(updateCounter, 10);
 
         // Initial call to display the counter immediately
