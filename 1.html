@@ -19,6 +19,7 @@
             font-size: 3rem;
             font-weight: bold;
             color: #007BFF;
+            transition: transform 0.2s ease-out, opacity 0.2s ease-out;
         }
     </style>
 </head>
@@ -31,17 +32,35 @@
         // Constants
         const registrationsPerMinute = 926; // Average registrations per minute
         const startDate = new Date("2024-12-31T00:00:00"); // Starting point
+        let displayedRegistrations = 0; // To track the displayed value
 
         // Calculate the number of registrations dynamically
-        function updateCounter() {
+        function calculateTotalRegistrations() {
             const now = new Date();
             const elapsedTimeInMinutes = (now - startDate) / (1000 * 60); // Time in minutes
-            const totalRegistrations = Math.floor(elapsedTimeInMinutes * registrationsPerMinute);
-
-            document.getElementById('counter').textContent = totalRegistrations.toLocaleString();
+            return Math.floor(elapsedTimeInMinutes * registrationsPerMinute);
         }
 
-        // Update counter every second
+        // Smoothly update the counter
+        function updateCounter() {
+            const totalRegistrations = calculateTotalRegistrations();
+
+            if (totalRegistrations !== displayedRegistrations) {
+                const counterElement = document.getElementById('counter');
+                counterElement.style.transform = 'scale(1.1)';
+                counterElement.style.opacity = '0.7';
+
+                setTimeout(() => {
+                    counterElement.textContent = totalRegistrations.toLocaleString();
+                    counterElement.style.transform = 'scale(1)';
+                    counterElement.style.opacity = '1';
+                }, 100);
+
+                displayedRegistrations = totalRegistrations;
+            }
+        }
+
+        // Update counter every 10ms for smooth animation
         setInterval(updateCounter, 10);
 
         // Initial call to display the counter immediately
