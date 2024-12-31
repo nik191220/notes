@@ -15,46 +15,89 @@
         h1 {
             font-size: 2.5rem;
         }
+        .counter-wrapper {
+            display: inline-block;
+            overflow: hidden;
+            height: 3rem;
+        }
         #counter {
+            display: inline-block;
+            position: relative;
             font-size: 3rem;
             font-weight: bold;
             color: #007BFF;
-            transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+            transition: transform 0.5s ease-out;
+        }
+        .digit {
+            display: block;
+            position: relative;
+        }
+        .digit span {
+            display: block;
+            position: absolute;
+            width: 100%;
+            text-align: center;
+        }
+        .digit span.new {
+            top: 100%;
+        }
+        .digit span.old {
+            top: 0;
         }
     </style>
 </head>
 <body>
     <h1>Live Registration Counter</h1>
     <p>Number of users registered since <strong>December 31, 2024</strong>:</p>
-    <div id="counter">0</div>
+    <div class="counter-wrapper">
+        <div id="counter"></div>
+    </div>
 
     <script>
-        // Constants
         const registrationsPerMinute = 926; // Average registrations per minute
         const startDate = new Date("2024-12-31T00:00:00"); // Starting point
         let displayedRegistrations = 0; // To track the displayed value
 
-        // Calculate the number of registrations dynamically
         function calculateTotalRegistrations() {
             const now = new Date();
             const elapsedTimeInMinutes = (now - startDate) / (1000 * 60); // Time in minutes
             return Math.floor(elapsedTimeInMinutes * registrationsPerMinute);
         }
 
-        // Smoothly update the counter
+        function createDigitElement(digit, type) {
+            const span = document.createElement('span');
+            span.textContent = digit;
+            span.classList.add(type);
+            return span;
+        }
+
         function updateCounter() {
             const totalRegistrations = calculateTotalRegistrations();
+            const counterElement = document.getElementById('counter');
 
             if (totalRegistrations !== displayedRegistrations) {
-                const counterElement = document.getElementById('counter');
-                counterElement.style.transform = 'scale(1.1)';
-                counterElement.style.opacity = '0.7';
+                const newNumber = totalRegistrations.toString();
+                const oldNumber = displayedRegistrations.toString().padStart(newNumber.length, '0');
+                counterElement.innerHTML = '';
 
-                setTimeout(() => {
-                    counterElement.textContent = totalRegistrations.toLocaleString();
-                    counterElement.style.transform = 'scale(1)';
-                    counterElement.style.opacity = '1';
-                }, 100);
+                for (let i = 0; i < newNumber.length; i++) {
+                    const digitWrapper = document.createElement('div');
+                    digitWrapper.classList.add('digit');
+
+                    const newDigit = createDigitElement(newNumber[i], 'new');
+                    const oldDigit = createDigitElement(oldNumber[i], 'old');
+
+                    digitWrapper.appendChild(oldDigit);
+                    digitWrapper.appendChild(newDigit);
+
+                    counterElement.appendChild(digitWrapper);
+
+                    // Trigger animation
+                    setTimeout(() => {
+                        oldDigit.style.top = '-100%';
+                        newDigit.style.top = '0';
+                    }, 10);
+                }
 
                 displayedRegistrations = totalRegistrations;
             }
