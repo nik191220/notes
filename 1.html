@@ -21,28 +21,31 @@
             height: 3rem;
         }
         #counter {
-            display: inline-block;
-            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
             font-size: 3rem;
             font-weight: bold;
             color: #007BFF;
-            transition: transform 0.5s ease-out;
         }
         .digit {
-            display: block;
             position: relative;
+            display: inline-block;
+            width: 1.2rem;
+            height: 3rem;
+            overflow: hidden;
         }
         .digit span {
-            display: block;
             position: absolute;
             width: 100%;
             text-align: center;
+            transition: transform 0.5s ease-out;
         }
         .digit span.new {
-            top: 100%;
+            transform: translateY(100%);
         }
         .digit span.old {
-            top: 0;
+            transform: translateY(0);
         }
     </style>
 </head>
@@ -94,17 +97,17 @@
 
                     // Trigger animation
                     setTimeout(() => {
-                        oldDigit.style.top = '-100%';
-                        newDigit.style.top = '0';
-                    }, 10);
+                        oldDigit.style.transform = 'translateY(-100%)';
+                        newDigit.style.transform = 'translateY(0)';
+                    }, 50);
                 }
 
                 displayedRegistrations = totalRegistrations;
             }
         }
 
-        // Update counter every 10ms for smooth animation
-        setInterval(updateCounter, 10);
+        // Update counter every 100ms for smooth animation
+        setInterval(updateCounter, 100);
 
         // Initial call to display the counter immediately
         updateCounter();
